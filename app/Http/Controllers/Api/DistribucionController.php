@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DistribucionMaquinaria;
-use Illuminate\Http\Request;
 use App\Services\NotificacionService;
+use Illuminate\Http\Request;
 
 class DistribucionController extends Controller
 {
@@ -18,7 +18,7 @@ class DistribucionController extends Controller
         $distribuciones = DistribucionMaquinaria::with([
             'equipo:id,inventario,nombre_equipo', // Ajusta los campos según la tabla equipos
             'implemento:id,inventario,nombre_implemento', // Ajusta según la tabla implementos
-            'solicitud'
+            'solicitud',
         ])
             ->where('operador_id', $operadorId)
             ->whereIn('estado', ['Pendiente', 'En Proceso']) // Filtra solo activas
@@ -42,11 +42,11 @@ class DistribucionController extends Controller
             'implemento',
             'solicitud',
             'operador',
-            'tiempoPerdidoDetalle'
+            'tiempoPerdidoDetalle',
         ])
             ->find($id);
 
-        if (!$distribucion) {
+        if (! $distribucion) {
             return response()->json([
                 'status' => false,
                 'message' => 'Distribución no encontrada',
@@ -63,7 +63,7 @@ class DistribucionController extends Controller
     {
         $distribucion = DistribucionMaquinaria::find($id);
 
-        if (!$distribucion) {
+        if (! $distribucion) {
             return response()->json([
                 'status' => false,
                 'message' => 'Distribución no encontrada.',
@@ -73,11 +73,11 @@ class DistribucionController extends Controller
         // Validación de campos
         $request->validate([
             'horometro_inicial' => 'nullable|numeric|gte:0',
-            'horometro_final'   => 'nullable|numeric|gte:0',
-            'hora_inicio'        => 'nullable|date_format:H:i,H:i:s',
-            'hora_fin'           => 'nullable|date_format:H:i,H:i:s',
-            'observacion'        => 'nullable|string|max:255',
-            'estado'             => 'nullable|string|in:Pendiente,En Proceso,Completada',
+            'horometro_final' => 'nullable|numeric|gte:0',
+            'hora_inicio' => 'nullable|date_format:H:i,H:i:s',
+            'hora_fin' => 'nullable|date_format:H:i,H:i:s',
+            'observacion' => 'nullable|string|max:255',
+            'estado' => 'nullable|string|in:Pendiente,En Proceso,Completada',
         ]);
 
         // Validación de lógica de negocio: Horómetro final no puede ser menor al inicial
@@ -89,7 +89,7 @@ class DistribucionController extends Controller
             if ($request->horometro_final <= $horometroInicial) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'El horómetro final debe ser mayor que el horómetro inicial (' . $horometroInicial . ').',
+                    'message' => 'El horómetro final debe ser mayor que el horómetro inicial ('.$horometroInicial.').',
                 ], 422);
             }
         }
@@ -105,39 +105,39 @@ class DistribucionController extends Controller
         // Actualizar solo los campos enviados
         $distribucion->update([
             'horometro_inicial' => $request->horometro_inicial ?? $distribucion->horometro_inicial,
-            'horometro_final'   => $request->horometro_final ?? $distribucion->horometro_final,
-            'hora_inicio'        => $request->hora_inicio ?? $distribucion->hora_inicio,
-            'hora_fin'           => $request->hora_fin ?? $distribucion->hora_fin,
-            'observacion'        => $request->observacion ?? $distribucion->observacion,
-            'estado'             => $nuevoEstado,
+            'horometro_final' => $request->horometro_final ?? $distribucion->horometro_final,
+            'hora_inicio' => $request->hora_inicio ?? $distribucion->hora_inicio,
+            'hora_fin' => $request->hora_fin ?? $distribucion->hora_fin,
+            'observacion' => $request->observacion ?? $distribucion->observacion,
+            'estado' => $nuevoEstado,
         ]);
 
-        if($distribucion->estado === 'Completada') {
+        if ($distribucion->estado === 'Completada') {
             NotificacionService::enviar(
-            [
-                'titulo' => 'Labor Finalizada',
-                'mensaje' => "Se ha finalizado la labor {$distribucion->observacion} asignada para la fecha {$distribucion->fecha}.",
-                'tipo_destinatario' => 'rol',
-                'rol_destino'       => 'Operador|Administrador|Supervisor',
-                'url' => route('distribuciones-diarias'),
-                'notificable_type' => DistribucionMaquinaria::class,
-                'notificable_id' => $distribucion->id,
-            ],
-            $distribucion->operador_id,
-        );
-        }else{
+                [
+                    'titulo' => 'Labor Finalizada',
+                    'mensaje' => "Se ha finalizado la labor {$distribucion->observacion} asignada para la fecha {$distribucion->fecha}.",
+                    'tipo_destinatario' => 'rol',
+                    'rol_destino' => 'Operador|Administrador|Supervisor',
+                    'url' => route('distribuciones-diarias'),
+                    'notificable_type' => DistribucionMaquinaria::class,
+                    'notificable_id' => $distribucion->id,
+                ],
+                $distribucion->operador_id,
+            );
+        } else {
             NotificacionService::enviar(
-            [
-                'titulo' => 'Labor En Proceso',
-                'mensaje' => "Se ha iniciado la labor {$distribucion->observacion} asignada al operador {$distribucion->operador->nombre_operador} para la fecha {$distribucion->fecha}.",
-                'tipo_destinatario' => 'rol',
-                'rol_destino'       => 'Operador|Administrador|Supervisor',
-                'url' => route('distribuciones-diarias'),
-                'notificable_type' => DistribucionMaquinaria::class,
-                'notificable_id' => $distribucion->id,
-            ],
-            $distribucion->operador_id,
-        );
+                [
+                    'titulo' => 'Labor En Proceso',
+                    'mensaje' => "Se ha iniciado la labor {$distribucion->observacion} asignada al operador {$distribucion->operador->nombre_operador} para la fecha {$distribucion->fecha}.",
+                    'tipo_destinatario' => 'rol',
+                    'rol_destino' => 'Operador|Administrador|Supervisor',
+                    'url' => route('distribuciones-diarias'),
+                    'notificable_type' => DistribucionMaquinaria::class,
+                    'notificable_id' => $distribucion->id,
+                ],
+                $distribucion->operador_id,
+            );
         }
 
         return response()->json([
@@ -151,7 +151,7 @@ class DistribucionController extends Controller
     {
         $distribucion = DistribucionMaquinaria::find($id);
 
-        if (!$distribucion) {
+        if (! $distribucion) {
             return response()->json([
                 'status' => false,
                 'message' => 'Distribución no encontrada.',
@@ -170,7 +170,7 @@ class DistribucionController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'Estado actualizado a ' . $request->estado . ' correctamente.',
+            'message' => 'Estado actualizado a '.$request->estado.' correctamente.',
             'data' => [
                 'id' => $distribucion->id,
                 'estado' => $distribucion->estado,

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->timestamp('leido_at')->nullable();
             $table->timestamps();
 
-
             // Índice para optimizar consultas de conteo de no leídas
             $table->index(['user_id', 'leido_at']);
         });

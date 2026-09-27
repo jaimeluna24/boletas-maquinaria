@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class UserSeeder extends Seeder
 {
@@ -16,7 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Crear o actualizar un usuario de pruebas sin duplicarlo
-       $user = User::updateOrCreate(
+        $user = User::updateOrCreate(
             ['email' => 'admin@boletas.com'], // Condición para buscar si existe
             [
                 'name' => 'jluna',
@@ -35,7 +34,6 @@ class UserSeeder extends Seeder
 
         $role = Role::create(['name' => 'Administrador']);
         $role1 = Role::create(['name' => 'Supervisor']);
-
 
         $user->assignRole($role);
         $user1->assignRole($role1);

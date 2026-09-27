@@ -1,16 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DistribucionController;
 use App\Http\Controllers\Api\NotificacionController;
 use App\Http\Controllers\Api\TiempoPerdidoController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
-
 
 // Ruta pública para la app móvil
 Route::post('/login', [AuthController::class, 'login']);
@@ -31,7 +30,6 @@ Route::get('/distribuciones/{id}', [DistribucionController::class, 'show']);
 Route::put('/distribuciones/{id}/horometro', [DistribucionController::class, 'updateHorometro']);
 Route::patch('/distribuciones/{id}/estado', [DistribucionController::class, 'updateEstado']);
 
-
 // Obtener notificaciones de un usuario
 Route::get('/usuarios/{userId}/notificaciones', [NotificacionController::class, 'getPorUsuario']);
 
@@ -46,5 +44,3 @@ Route::get('/usuarios/{userId}/notificaciones-cantidad', [NotificacionController
 
 Route::post('/tiempo-perdido/crear', [TiempoPerdidoController::class, 'store']);
 Route::get('/tiempo-perdido/{distribucionId}/registros', [TiempoPerdidoController::class, 'getPorDistribucion']);
-
-

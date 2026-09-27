@@ -21,7 +21,7 @@ class AuthController extends Controller
         $user = User::where('name', $request->name)->first();
 
         // Verificar credenciales
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'name' => ['Las credenciales proporcionadas son incorrectas.'],
             ]);

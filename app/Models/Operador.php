@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 
 class Operador extends Model
@@ -19,7 +19,7 @@ class Operador extends Model
         'codigo',
         'nombre_operador',
         'telefono_operador',
-        'estado_operador'
+        'estado_operador',
     ];
 
     protected $casts = [
@@ -61,7 +61,7 @@ class Operador extends Model
                 $siguienteNumero = (int) $matches[1] + 1;
             }
 
-            return 'OPR-' . str_pad($siguienteNumero, 4, '0', STR_PAD_LEFT);
+            return 'OPR-'.str_pad($siguienteNumero, 4, '0', STR_PAD_LEFT);
         });
     }
 }

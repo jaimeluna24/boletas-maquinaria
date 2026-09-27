@@ -16,7 +16,7 @@ class NotificacionController extends Controller
         // Si hay usuario autenticado se usa auth()->id(), de lo contrario se toma de la URL o del Request
         $idUsuario = auth()->id() ?? $userId ?? $request->query('user_id');
 
-        if (!$idUsuario) {
+        if (! $idUsuario) {
             return response()->json([
                 'status' => false,
                 'message' => 'Se requiere el ID del usuario.',
@@ -49,7 +49,7 @@ class NotificacionController extends Controller
     {
         $notificacion = NotificacionUsuario::find($id);
 
-        if (!$notificacion) {
+        if (! $notificacion) {
             return response()->json([
                 'status' => false,
                 'message' => 'Notificación no encontrada.',
@@ -84,7 +84,7 @@ class NotificacionController extends Controller
         ], 200);
     }
 
-     /**
+    /**
      * Obtener las últimas notificaciones y el conteo de no leídas para un usuario.
      */
     public function getCantidadSinLeerPorUsuario(Request $request, $userId = null)
@@ -92,7 +92,7 @@ class NotificacionController extends Controller
         // Si hay usuario autenticado se usa auth()->id(), de lo contrario se toma de la URL o del Request
         $idUsuario = auth()->id() ?? $userId ?? $request->query('user_id');
 
-        if (!$idUsuario) {
+        if (! $idUsuario) {
             return response()->json([
                 'status' => false,
                 'message' => 'Se requiere el ID del usuario.',

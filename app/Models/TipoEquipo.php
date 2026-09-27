@@ -14,7 +14,7 @@ class TipoEquipo extends Model
     protected $table = 'tipo_equipos';
 
     protected $fillable = [
-        'nombre_tipo_equipo'
+        'nombre_tipo_equipo',
     ];
 
     public function equipos(): HasMany

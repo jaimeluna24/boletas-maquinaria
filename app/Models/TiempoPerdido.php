@@ -15,7 +15,7 @@ class TiempoPerdido extends Model
 
     protected $fillable = [
         'codigo_tiempo_perdido',
-        'nombre_tiempo_perdido'
+        'nombre_tiempo_perdido',
     ];
 
     public function tiempoPerdidoDetalles(): HasMany

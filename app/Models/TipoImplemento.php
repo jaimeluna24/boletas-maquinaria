@@ -14,7 +14,7 @@ class TipoImplemento extends Model
     protected $table = 'tipo_implementos';
 
     protected $fillable = [
-        'nombre_tipo_implemento'
+        'nombre_tipo_implemento',
     ];
 
     public function implementos(): HasMany

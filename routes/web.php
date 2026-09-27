@@ -1,8 +1,8 @@
 <?php
 
-use Livewire\Livewire;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 // Ruta raíz redirige según autenticación
 Route::get('/', function () {
@@ -31,23 +31,17 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/usuarios', 'pages::usuarios.index')->name('usuarios');
     Route::livewire('/crear-usuario', 'pages::usuarios.crear')->name('usuario-crear');
 
-
     Route::livewire('/maquinaria', 'pages::maquinaria.index')->name('maquinaria');
     Route::livewire('/implementos', 'pages::implementos.index')->name('implementos');
     Route::livewire('/operadores', 'pages::operadores.index')->name('operadores');
     Route::livewire('/actividades', 'pages::actividades.index')->name('actividades');
     Route::livewire('/tiempo-perdido', 'pages::tiempo_perdido.index')->name('tiempo-perdido');
 
-
-
-
-
-
-
     Route::post('/logout', function () {
         Auth::logout();
         session()->invalidate();
         session()->regenerateToken();
+
         return redirect('/login');
     })->name('logout');
 });
