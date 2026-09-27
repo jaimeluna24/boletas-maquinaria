@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -65,7 +66,7 @@ class User extends Authenticatable
             : $initials;
     }
 
-    public function notificaciones()
+    public function notificaciones(): BelongsToMany
     {
         return $this->belongsToMany(Notificacion::class, 'notificacion_usuarios')
             ->withPivot('leido_at')
@@ -73,7 +74,7 @@ class User extends Authenticatable
             ->orderByPivot('created_at', 'desc');
     }
 
-    public function notificacionesNoLeidas()
+    public function notificacionesNoLeidas(): BelongsToMany
     {
         return $this->notificaciones()->wherePivotNull('leido_at');
     }

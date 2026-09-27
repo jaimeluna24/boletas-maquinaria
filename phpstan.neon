@@ -11,3 +11,13 @@ parameters:
         - routes/
 
     level: 7
+
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        - '#Class App\\Models\\.* uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory#'
+        - '#Method App\\Models\\.* return type with generic class Illuminate\\Database\\Eloquent\\Relations\\.*#'
+
+    excludePaths:
+        - config/sanctum.php

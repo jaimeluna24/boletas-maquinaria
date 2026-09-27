@@ -61,7 +61,7 @@ class Operador extends Model
                 $siguienteNumero = (int) $matches[1] + 1;
             }
 
-            return 'OPR-'.str_pad($siguienteNumero, 4, '0', STR_PAD_LEFT);
+            return 'OPR-'.str_pad((string) $siguienteNumero, 4, '0', STR_PAD_LEFT);
         });
     }
 }

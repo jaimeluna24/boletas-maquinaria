@@ -68,7 +68,7 @@ class Solicitud extends Model
                 $siguienteNumero = (int) $matches[1] + 1;
             }
 
-            return 'SOL-'.str_pad($siguienteNumero, 4, '0', STR_PAD_LEFT);
+            return 'SOL-'.str_pad((string) $siguienteNumero, 4, '0', STR_PAD_LEFT);
         });
     }
 }

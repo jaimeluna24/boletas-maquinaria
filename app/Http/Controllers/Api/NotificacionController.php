@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\NotificacionUsuario;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificacionController extends Controller
@@ -11,10 +12,10 @@ class NotificacionController extends Controller
     /**
      * Obtener las últimas notificaciones y el conteo de no leídas para un usuario.
      */
-    public function getPorUsuario(Request $request, $userId = null)
+    public function getPorUsuario(Request $request, int $userId): JsonResponse
     {
         // Si hay usuario autenticado se usa auth()->id(), de lo contrario se toma de la URL o del Request
-        $idUsuario = auth()->id() ?? $userId ?? $request->query('user_id');
+        $idUsuario = $userId ?: (auth()->id() ?? $request->query('user_id'));
 
         if (! $idUsuario) {
             return response()->json([
@@ -45,7 +46,7 @@ class NotificacionController extends Controller
     /**
      * Marcar una notificación específica como leída.
      */
-    public function marcarComoLeida($id)
+    public function marcarComoLeida(int $id): JsonResponse
     {
         $notificacion = NotificacionUsuario::find($id);
 
@@ -70,7 +71,7 @@ class NotificacionController extends Controller
     /**
      * Marcar todas las notificaciones de un usuario como leídas.
      */
-    public function marcarTodasComoLeidas($userId)
+    public function marcarTodasComoLeidas(int $userId): JsonResponse
     {
         NotificacionUsuario::where('user_id', $userId)
             ->whereNull('leido_at')
@@ -87,10 +88,10 @@ class NotificacionController extends Controller
     /**
      * Obtener las últimas notificaciones y el conteo de no leídas para un usuario.
      */
-    public function getCantidadSinLeerPorUsuario(Request $request, $userId = null)
+    public function getCantidadSinLeerPorUsuario(Request $request, int $userId): JsonResponse
     {
         // Si hay usuario autenticado se usa auth()->id(), de lo contrario se toma de la URL o del Request
-        $idUsuario = auth()->id() ?? $userId ?? $request->query('user_id');
+        $idUsuario = $userId ?: (auth()->id() ?? $request->query('user_id'));
 
         if (! $idUsuario) {
             return response()->json([

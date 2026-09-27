@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DistribucionMaquinaria;
+use App\Models\Operador;
 use App\Services\NotificacionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DistribucionController extends Controller
@@ -13,7 +15,7 @@ class DistribucionController extends Controller
      * Obtener las distribuciones asignadas a un operador.
      * Si no se envía operador_id, se pueden consultar todas o filtrar por parámetro.
      */
-    public function getPorOperador(Request $request, $operadorId)
+    public function getPorOperador(Request $request, int $operadorId): JsonResponse
     {
         $distribuciones = DistribucionMaquinaria::with([
             'equipo:id,inventario,nombre_equipo', // Ajusta los campos según la tabla equipos
@@ -35,7 +37,7 @@ class DistribucionController extends Controller
     /**
      * Obtener el detalle de una asignación específica.
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         $distribucion = DistribucionMaquinaria::with([
             'equipo',
@@ -44,7 +46,7 @@ class DistribucionController extends Controller
             'operador',
             'tiempoPerdidoDetalle',
         ])
-            ->find($id);
+            ->findOrFail($id);
 
         if (! $distribucion) {
             return response()->json([
@@ -59,9 +61,9 @@ class DistribucionController extends Controller
         ], 200);
     }
 
-    public function updateHorometro(Request $request, $id)
+    public function updateHorometro(Request $request, int $id): JsonResponse
     {
-        $distribucion = DistribucionMaquinaria::find($id);
+        $distribucion = DistribucionMaquinaria::findOrFail($id);
 
         if (! $distribucion) {
             return response()->json([
@@ -126,10 +128,13 @@ class DistribucionController extends Controller
                 $distribucion->operador_id,
             );
         } else {
+            /** @var Operador|null $operadorModel */
+            $operadorModel = $distribucion->operador;
+            $operador = $operadorModel?->nombre_operador;
             NotificacionService::enviar(
                 [
                     'titulo' => 'Labor En Proceso',
-                    'mensaje' => "Se ha iniciado la labor {$distribucion->observacion} asignada al operador {$distribucion->operador->nombre_operador} para la fecha {$distribucion->fecha}.",
+                    'mensaje' => "Se ha iniciado la labor {$distribucion->observacion} asignada al operador {$operador} para la fecha {$distribucion->fecha}.",
                     'tipo_destinatario' => 'rol',
                     'rol_destino' => 'Operador|Administrador|Supervisor',
                     'url' => route('distribuciones-diarias'),
@@ -147,7 +152,7 @@ class DistribucionController extends Controller
         ], 200);
     }
 
-    public function updateEstado(Request $request, $id)
+    public function updateEstado(Request $request, int $id): JsonResponse
     {
         $distribucion = DistribucionMaquinaria::find($id);
 

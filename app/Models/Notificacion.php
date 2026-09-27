@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Notificacion extends Model
 {
@@ -20,14 +22,14 @@ class Notificacion extends Model
         'creado_por',
     ];
 
-    public function usuarios()
+    public function usuarios(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'notificacion_usuarios')
             ->withPivot('leido_at')
             ->withTimestamps();
     }
 
-    public function notificable()
+    public function notificable(): MorphTo
     {
         return $this->morphTo();
     }

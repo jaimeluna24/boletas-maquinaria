@@ -12,8 +12,8 @@ class NotificacionService
     /**
      * Envía una notificación a uno, varios usuarios o un rol.
      *
-     * @param  array  $datos  [titulo, mensaje, tipo_destinatario, rol_destino, url, notificable_type, notificable_id]
-     * @param  int|array|null  $destinatarios  ID de usuario o array de IDs (si tipo_destinatario es 'usuario')
+     * @param  array<string, mixed>  $datos  [titulo, mensaje, tipo_destinatario, rol_destino, url, notificable_type, notificable_id]
+     * @param  int|array<int>|null  $destinatarios  ID de usuario o array de IDs (si tipo_destinatario es 'usuario')
      */
     public static function enviar(array $datos, int|array|null $destinatarios = null): bool
     {
@@ -45,12 +45,6 @@ class NotificacionService
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-
-            dd([
-                'mensaje' => $e->getMessage(),
-                'archivo' => $e->getFile(),
-                'linea' => $e->getLine(),
-            ]);
 
             Log::error('Error enviando notificación: '.$e->getMessage(), [
                 'datos' => $datos,
@@ -89,6 +83,10 @@ class NotificacionService
 
     /**
      * Obtiene el listado de IDs de usuario según el alcance especificado.
+     *
+     * @param  int|array<int>|null  $destinatarios
+     * @param  string|array<string>|null  $rolDestino
+     * @return array<int>
      */
     private static function obtenerUserIds(string $tipo, int|array|null $destinatarios = null, string|array|null $rolDestino = null): array
     {

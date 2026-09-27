@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\TiempoPerdidoDetalle;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -11,17 +12,9 @@ use Illuminate\Support\Facades\Validator;
 class TiempoPerdidoController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         // 1. Validar los datos de entrada
         $validator = Validator::make($request->all(), [
@@ -84,7 +77,7 @@ class TiempoPerdidoController extends Controller
         }
     }
 
-    public function getPorDistribucion(Request $request, $distribucionId = null)
+    public function getPorDistribucion(Request $request, int $distribucionId): JsonResponse
     {
         // Si hay usuario autenticado se usa auth()->id(), de lo contrario se toma de la URL o del Request
 
@@ -106,29 +99,5 @@ class TiempoPerdidoController extends Controller
             'status' => true,
             'data' => $tiempoPerdido,
         ], 200);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(TiempoPerdidoDetalle $tiempoPerdidoDetalle)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, TiempoPerdidoDetalle $tiempoPerdidoDetalle)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(TiempoPerdidoDetalle $tiempoPerdidoDetalle)
-    {
-        //
     }
 }
