@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::livewire('/distribuciones-diarias', 'pages::distribucion_maquinaria.index')->name('distribuciones-diarias');
     Route::livewire('/crear-distribucion', 'pages::distribucion_maquinaria.crear')->name('crear-distribucion');
+    Route::livewire('/distribuciones-historico', 'pages::distribucion_maquinaria.general')->name('distribuciones-historico');
 
     Route::livewire('/notificacion-detalle/{id}', 'pages::notificaciones.detalles')->name('notificacion-detalle');
 

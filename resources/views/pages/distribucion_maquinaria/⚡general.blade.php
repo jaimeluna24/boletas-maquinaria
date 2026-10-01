@@ -23,18 +23,7 @@ new class extends Component {
     #[Url]
     public $sortDirection = 'desc';
 
-    #[Url]
-    public string $fecha = '';
-
-    public function mount()
-    {
-        // Si la fecha no viene en la URL, inicializar con la fecha actual (YYYY-MM-DD)
-        if (empty($this->fecha)) {
-            $this->fecha = now()->format('Y-m-d');
-        }
-    }
-
-    // 2. Resetear la paginación cuando cambia la fecha
+    // Resetear la paginación cuando cambia la fecha
     public function updatingFecha()
     {
         $this->resetPage();
@@ -102,12 +91,6 @@ new class extends Component {
     {
         $query = DistribucionMaquinaria::query()->with(['operador', 'solicitud', 'equipo', 'implemento', 'tiempoPerdidoDetalle']);
 
-        // 3. Filtro obligatorio por Fecha (usa la columna de fecha de tu tabla)
-        if ($this->fecha) {
-            $query->whereDate('fecha', $this->fecha);
-            // Nota: Reemplaza 'fecha' por el nombre real de tu columna (ej. 'fecha_distribucion' o 'created_at')
-        }
-
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('lugar', 'like', '%' . $this->search . '%')
@@ -140,29 +123,19 @@ new class extends Component {
     {
         return redirect()->route('detalle-distribucion', ['id' => $id]);
     }
-
-    public function crearDistribucion()
-    {
-        return redirect()->route('crear-distribucion');
-    }
 };
 ?>
 
 <div>
     <div class="w-full pl-6 pr-6 pt-5">
         <div class="flex gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
-            <h4 class="text-xl font-semibold">Distribución de Maquinaria</h4>
+            <h4 class="text-xl font-semibold">Distribución de Maquinaria Historico</h4>
 
             <div class="flex gap-2">
-                <div class="flex items-center gap-2">
-                    <label for="fecha" class="label-text font-medium">Fecha:</label>
-                    <input type="date" id="fecha" wire:model.live="fecha" class="input input-bordered" />
-                </div>
                 <div class="w-full max-w-md">
                     <input type="text" wire:model.live.debounce.200ms="search"
                         placeholder="Buscar por Operador, Equipo" class="input input-md input-bordered w-full" />
                 </div>
-                <button wire:click="crearDistribucion()" class="btn btn-primary btn-md">Nueva</button>
 
             </div>
         </div>
@@ -190,11 +163,11 @@ new class extends Component {
                             </th>
                             <td class="text-center font-mono font-medium">{{ $item->operador->nombre_operador }}</td>
                             <td>{{ $item->equipo->inventario ?? 'N/A' }}</td>
-                            <td>{{ $item->descripcion }}</td>
+                            <td>{{ $item->descripcion ?? 'N/A' }}</td>
                             <td>{{ $item->lugar }}</td>
                             {{-- <td class="text-center">{{ \Carbon\Carbon::parse($item->fecha_solicitud)->format('d/m/Y') }}
                             </td> --}}
-                            <td class="text-center truncate">{{ $item->hora_inicio }}</td>
+                            <td class="text-center truncate">{{ $item->fecha }}</td>
                             <td class="text-center">
                                 @switch($item->estado)
                                     @case('Completada')

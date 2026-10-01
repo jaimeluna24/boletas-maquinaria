@@ -15,6 +15,20 @@
             localStorage.getItem('theme') ?? 'light'
         );
     </script>
+    <style>
+        .logo-dark {
+            display: none;
+            width: 130px;
+        }
+
+        [data-theme="dark"] .logo-light {
+            display: none;
+        }
+
+        [data-theme="dark"] .logo-dark {
+            display: block;
+        }
+    </style>
     @livewireStyles
 </head>
 
@@ -22,17 +36,19 @@
     <nav class="navbar rounded-box justify-between gap-4 shadow-base-300/20 shadow-sm">
         <div class="navbar-start">
             <div class="items-center">
-                <a class="link text-base-content link-neutral text-xl font-bold no-underline" href="#">
-                    FlyonUI
-                </a>
+                <img src="{{ asset('images/logo_achsa_light.jpg') }}" alt="Logo" class="logo-light" style="width: 130px">
+
+                <img src="{{ asset('images/logo_achsa_dark.png') }}" alt="Logo" class="logo-dark">
+
+
             </div>
         </div>
         <div id="dropdown-navbar-collapse"
             class="md:navbar-center overflow-hidden transition-[height] duration-300 max-md:w-full z-20">
             <ul class="menu md:menu-horizontal gap-2 p-0 text-base max-md:mt-2">
-                <li><a href="/dashboard">
+                {{-- <li><a href="/dashboard">
                             <span class="icon-[boxicons--chart-line] size-4.5 shrink-0"></span>
-                    Dashboard</a></li>
+                    Dashboard</a></li> --}}
                 {{-- <li class="dropdown relative inline-flex [--auto-close:inside] [--offset:9] [--placement:bottom-end]">
                     <button id="dropdown-nav" type="button"
                         class="dropdown-toggle dropdown-open:bg-base-content/10 dropdown-open:text-base-content"
@@ -58,19 +74,19 @@
                     <button id="dropdown-nav" type="button"
                         class="dropdown-toggle dropdown-open:bg-base-content/10 dropdown-open:text-base-content"
                         aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                            <span class="icon-[hugeicons--list-end] size-4.5 shrink-0"></span>
+                        <span class="icon-[hugeicons--list-end] size-4.5 shrink-0"></span>
                         Distribución de Maquinaria
                         <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu"
                         aria-orientation="vertical" aria-labelledby="dropdown-nav">
                         <li><a class="dropdown-item" href="/distribuciones-diarias">
-                            <span class="icon-[hugeicons--task-daily-01] size-4.5 shrink-0"></span>
-                            Distribución Diaria
-                        </a></li>
-                        <li><a class="dropdown-item" href="/ver-planes">
-                            <span class="icon-[solar--calendar-line-duotone] size-4.5 shrink-0"></span>
-                            Distribución General</a></li>
+                                <span class="icon-[hugeicons--task-daily-01] size-4.5 shrink-0"></span>
+                                Distribución Diaria
+                            </a></li>
+                        <li><a class="dropdown-item" href="/distribuciones-historico">
+                                <span class="icon-[solar--calendar-line-duotone] size-4.5 shrink-0"></span>
+                                Distribución General</a></li>
                         {{-- <hr class="border-base-content/25 -mx-2" />
                         <li><a class="dropdown-item" href="#">Figma designs</a></li> --}}
                     </ul>
@@ -79,36 +95,36 @@
                     <button id="dropdown-nav" type="button"
                         class="dropdown-toggle dropdown-open:bg-base-content/10 dropdown-open:text-base-content"
                         aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-                            <span class="icon-[oui--nav-administration] size-4.5 shrink-0"></span>
+                        <span class="icon-[oui--nav-administration] size-4.5 shrink-0"></span>
                         Administración
                         <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu"
                         aria-orientation="vertical" aria-labelledby="dropdown-nav">
                         <li><a class="dropdown-item" href="/maquinaria">
-                            <span class="icon-[material-symbols--agriculture-outline] size-4.5 shrink-0"></span>
-                            Maquinaria
-                        </a></li>
+                                <span class="icon-[material-symbols--agriculture-outline] size-4.5 shrink-0"></span>
+                                Maquinaria
+                            </a></li>
                         <li><a class="dropdown-item" href="/implementos">
-                            <span class="icon-[carbon--partition-repartition] size-4.5 shrink-0"></span>
-                            Implementos
-                        </a></li>
+                                <span class="icon-[carbon--partition-repartition] size-4.5 shrink-0"></span>
+                                Implementos
+                            </a></li>
                         <li><a class="dropdown-item" href="/operadores">
-                            <span class="icon-[healthicons--truck-driver] size-4.5 shrink-0"></span>
-                            Operadores
-                        </a></li>
+                                <span class="icon-[healthicons--truck-driver] size-4.5 shrink-0"></span>
+                                Operadores
+                            </a></li>
                         {{-- <li><a class="dropdown-item" href="/actividades">
                             <span class="icon-[fluent--broad-activity-feed-16-regular] size-4.5 shrink-0"></span>
                             Actividades
                         </a></li> --}}
                         <li><a class="dropdown-item" href="/tiempo-perdido">
-                            <span class="icon-[mdi--tool-time] size-4.5 shrink-0"></span>
-                            Tiempo Perdido
-                        </a></li>
+                                <span class="icon-[mdi--tool-time] size-4.5 shrink-0"></span>
+                                Tiempo Perdido
+                            </a></li>
                         <li><a class="dropdown-item" href="/usuarios">
-                            <span class="icon-[garden--user-list-stroke-12] size-4.5 shrink-0"></span>
-                            Usuarios
-                        </a></li>
+                                <span class="icon-[garden--user-list-stroke-12] size-4.5 shrink-0"></span>
+                                Usuarios
+                            </a></li>
                         {{-- <hr class="border-base-content/25 -mx-2" />
                         <li><a class="dropdown-item" href="#">Figma designs</a></li> --}}
                     </ul>
@@ -125,7 +141,7 @@
                     aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
                     <div class="avatar">
                         <div class="size-9.5 rounded-full">
-                            <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar 1" />
+                            <span class="icon-[basil--user-solid] size-8"></span>
                         </div>
                     </div>
                 </button>
@@ -134,15 +150,17 @@
                     <li class="dropdown-header gap-2">
                         <div class="avatar">
                             <div class="w-10 rounded-full">
-                                <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar" />
+                                <span class="icon-[basil--user-solid] size-10"></span>
                             </div>
                         </div>
                         <div>
-                            <h6 class="text-base-content text-base font-semibold">{{ auth()->user()->nombre_completo }}</h6>
-                            <small class="text-base-content/50">{{ auth()->user()->roles->first()?->name ?? 'Sin Rol' }}</small>
+                            <h6 class="text-base-content text-base font-semibold">{{ auth()->user()->nombre_completo }}
+                            </h6>
+                            <small
+                                class="text-base-content/50">{{ auth()->user()->roles->first()?->name ?? 'Sin Rol' }}</small>
                         </div>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="dropdown-item" href="#">
                             <span class="icon-[tabler--user]"></span>
                             My Profile
@@ -165,7 +183,7 @@
                             <span class="icon-[tabler--help-triangle]"></span>
                             FAQs
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="dropdown-footer gap-2">
                         <form action="{{ route('logout') }}" method="POST" class="w-full">
                             @csrf
