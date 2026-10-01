@@ -28,13 +28,14 @@ export default defineConfig({
                 '**/vendor/**',
             ],
         },
-        host: '0.0.0.0',
+        // host: '0.0.0.0',
         port: 5173,
         strictPort: true,
         hmr: {
             // host: '192.168.99.16',
-            host: '192.168.1.34',
+            // host: '192.168.1.34',
             // host: '10.1.8.46',
+            // host: '10.230.248.229',
         },
     },
 });
