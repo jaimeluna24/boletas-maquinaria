@@ -4,11 +4,9 @@
 FROM node:24.14.0-alpine AS frontend
 WORKDIR /app
 
-# Copiar manifiestos e instalar dependencias
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copiar código fuente y compilar assets
 COPY . .
 RUN npm run build
 
@@ -17,7 +15,7 @@ RUN npm run build
 # ---------------------------------------------------
 FROM php:8.4-cli-alpine AS app
 
-# Instalar dependencias del sistema y extensiones necesarias para Laravel
+# Instalar dependencias del sistema y extensiones necesarias
 RUN apk add --no-cache \
     curl \
     libpng-dev \
@@ -30,18 +28,23 @@ RUN apk add --no-cache \
     $PHPIZE_DEPS \
     && docker-php-ext-install pdo_mysql mbstring bcmath gd zip
 
-# Copiar instalador de Composer
+# Copiar Composer desde la imagen oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Instalar dependencias de PHP sin paquetes de desarrollo
+# Instalar dependencias de PHP sin ejecutar scripts que dependan de artisan
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Copiar el proyecto y los assets compilados en la etapa de Node
+# Copiar el código fuente completo del proyecto
 COPY . .
+
+# Copiar los assets compilados en la etapa de Node
 COPY --from=frontend /app/public/build ./public/build
+
+# Ejecutar los scripts pendientes de Composer (como package:discover) ahora que artisan está disponible
+RUN composer dump-autoload --optimize --no-dev
 
 EXPOSE 8000
 
