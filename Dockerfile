@@ -22,6 +22,7 @@ RUN apk add --no-cache \
     curl \
     libpng-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
     unzip \
     git \
