@@ -1,51 +1,35 @@
-# ---------------------------------------------------
-# 1. Fase de Compilación de Assets (Frontend)
-# ---------------------------------------------------
-FROM node:24.14.0-alpine AS frontend
-WORKDIR /app
+# syntax=docker/dockerfile:1
 
+# --- 1) Assets con Vite ---
+FROM node:24.14.0-alpine AS assets
+WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
-
 COPY . .
 RUN npm run build
 
-# ---------------------------------------------------
-# 2. Fase de Aplicación (Backend PHP 8.4)
-# ---------------------------------------------------
-FROM php:8.4-cli-alpine AS app
+# --- 2) Imagen final ---
+FROM dunglas/frankenphp:1-php8.4-alpine
 
-# Instalar dependencias del sistema y extensiones necesarias
-RUN apk add --no-cache \
-    curl \
-    libpng-dev \
-    libxml2-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    git \
-    oniguruma-dev \
-    $PHPIZE_DEPS \
-    && docker-php-ext-install pdo_mysql mbstring bcmath gd zip
+RUN install-php-extensions pdo_mysql opcache intl zip bcmath pcntl gd redis
 
-# Copiar Composer desde la imagen oficial
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+WORKDIR /app
 
-# Instalar dependencias de PHP sin ejecutar scripts que dependan de artisan
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-interaction
 
-# Copiar el código fuente completo del proyecto
 COPY . .
+COPY --from=assets /app/public/build ./public/build
 
-# Copiar los assets compilados en la etapa de Node
-COPY --from=frontend /app/public/build ./public/build
+RUN composer dump-autoload --optimize --no-dev \
+    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
 
-# Ejecutar los scripts pendientes de Composer (como package:discover) ahora que artisan está disponible
-RUN composer dump-autoload --optimize --no-dev
+ENV SERVER_NAME=:80
 
-EXPOSE 8000
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

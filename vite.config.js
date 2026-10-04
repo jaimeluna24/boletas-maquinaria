@@ -18,7 +18,14 @@ export default defineConfig({
     ]),
     server: {
         cors: true,
+        host: '0.0.0.0', // Escuchar en todas las interfaces de red
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: 'localhost', // Permite al navegador en Windows conectar con el HMR
+        },
         watch: {
+            usePolling: true, // Detecta cambios de archivos en sistemas de archivos montados (Windows/WSL)
             ignored: [
                 '**/.agents/**',
                 '**/.claude/**',
@@ -27,15 +34,6 @@ export default defineConfig({
                 '**/storage/framework/views/**',
                 '**/vendor/**',
             ],
-        },
-        // host: '0.0.0.0',
-        port: 5173,
-        strictPort: true,
-        hmr: {
-            // host: '192.168.99.16',
-            // host: '192.168.1.34',
-            // host: '10.1.8.46',
-            // host: '10.230.248.229',
         },
     },
 });
